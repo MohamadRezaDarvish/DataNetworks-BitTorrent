@@ -1,6 +1,6 @@
 File Name: tracker.log
 Creation Date/Time: 2026-08-12 22:44:13
-Last Modified Date/Time: 2026-08-12 23:05:40
+Last Modified Date/Time: 2026-08-13 02:24:44
 
 --- EVENTS ---
 Event Type: TRACKER_STARTED
@@ -61,5 +61,49 @@ Description: 127.0.0.1:6882
 --------------------------------------------------
 Event Type: TRACKER_RESPONSE
 Date/Time: 2026-08-12 23:05:40
+Description: Returned 0 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_STARTED
+Date/Time: 2026-08-13 02:23:22
+Description: Tracker listening on port 6969
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-13 02:24:44
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-13 02:24:44
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-13 02:24:44
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-13 02:24:44
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_UPDATE
+Date/Time: 2026-08-13 02:24:44
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-13 02:24:44
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-13 02:24:44
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-13 02:24:44
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-13 02:24:44
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-13 02:24:44
 Description: Returned 0 peers to 127.0.0.1:6882
 --------------------------------------------------

@@ -6,7 +6,7 @@ from common.bencode import bencode
 SOURCE = Path("shared_files/alphabet.txt")
 OUTPUT = Path("metainfo/alphabet.torrent")
 
-TRACKER_URL = b"http://127.0.0.1:8080/announce"
+TRACKER_URL = b"http://127.0.0.1:6969/announce"
 PIECE_LENGTH = 10
 
 
