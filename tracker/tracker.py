@@ -1,3 +1,5 @@
+from pathlib import Path
+import sys
 import time
 import threading
 
@@ -372,4 +374,6 @@ def run_tracker():
     server.serve_forever()
 
 
-run_tracker()
+# Start tracker when this file is executed
+if Path(sys.argv[0]).name == "tracker.py":
+    run_tracker()

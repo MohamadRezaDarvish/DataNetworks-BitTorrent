@@ -89,5 +89,4 @@ class TestBencode(unittest.TestCase):
             bendecode(b"i5ei6e")
 
 
-if __name__ == "__main__":
-    unittest.main()
+unittest.main()

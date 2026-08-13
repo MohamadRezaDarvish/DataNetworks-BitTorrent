@@ -15,7 +15,10 @@ from peer.messages import (
     make_handshake,
     make_have,
     make_interested,
+    make_keep_alive,
     make_not_interested,
+    make_piece,
+    make_request,
     make_unchoke,
     parse_handshake,
     parse_message
@@ -26,13 +29,19 @@ from peer.piece_manager import (
     get_bytes_left,
     get_missing_pieces,
     get_piece_count,
-    have_piece
+    get_piece_size,
+    have_piece,
+    is_complete,
+    read_piece_block,
+    save_piece
 )
 
 
 PEER_HOST = "0.0.0.0"
 TRACKER_TIMEOUT = 5
 PEER_SOCKET_TIMEOUT = 5
+PEER_PING_INTERVAL = 15
+MAX_BLOCK_SIZE = 16384
 
 
 # Read and decode a .torrent file
@@ -190,7 +199,8 @@ def accept_peer_connections(
     peer_id,
     log_file,
     connections,
-    piece_manager
+    piece_manager,
+    peer=None
 ):
     while True:
         try:
@@ -209,7 +219,8 @@ def accept_peer_connections(
                 peer_id,
                 log_file,
                 connections,
-                piece_manager
+                piece_manager,
+                peer
             ),
             daemon=True
         )
@@ -319,7 +330,11 @@ def create_connection_state(sock, address, remote_peer_id):
         "sent_bitfield": False,
         "connected": True,
         "message_thread": None,
-        "send_lock": threading.Lock()
+        "send_lock": threading.Lock(),
+        "download_piece": None,
+        "download_data": bytearray(),
+        "request_begin": None,
+        "request_length": 0
     }
 
 
@@ -429,17 +444,353 @@ def update_interest(
     )
 
 
+# Release one piece reserved by a connection
+def release_requested_piece(connection, peer):
+    piece_index = connection["download_piece"]
+
+    if peer is not None and piece_index is not None:
+        with peer["download_lock"]:
+            peer["requested_pieces"].discard(piece_index)
+
+    connection["download_piece"] = None
+    connection["download_data"] = bytearray()
+    connection["request_begin"] = None
+    connection["request_length"] = 0
+
+
+# Reserve one missing piece from a connected peer
+def reserve_requested_piece(connection, peer):
+    if connection["download_piece"] is not None:
+        return connection["download_piece"]
+
+    with peer["download_lock"]:
+        missing_pieces = set(
+            get_missing_pieces(peer["piece_manager"])
+        )
+        available_pieces = sorted(
+            missing_pieces & connection["remote_pieces"]
+        )
+
+        for piece_index in available_pieces:
+            if piece_index in peer["requested_pieces"]:
+                continue
+
+            peer["requested_pieces"].add(piece_index)
+            connection["download_piece"] = piece_index
+            connection["download_data"] = bytearray()
+
+            return piece_index
+
+    return None
+
+
+# Request the next block from one peer
+def request_next_block(connection, peer):
+    if (
+        peer is None
+        or not peer["running"]
+        or not connection["connected"]
+        or connection["am_choked"]
+        or not connection["am_interested"]
+        or connection["request_begin"] is not None
+    ):
+        return False
+
+    piece_index = reserve_requested_piece(
+        connection,
+        peer
+    )
+
+    if piece_index is None:
+        return False
+
+    begin = len(connection["download_data"])
+    piece_size = get_piece_size(
+        peer["piece_manager"],
+        piece_index
+    )
+    length = min(
+        MAX_BLOCK_SIZE,
+        piece_size - begin
+    )
+
+    if length <= 0:
+        release_requested_piece(
+            connection,
+            peer
+        )
+        return False
+
+    connection["request_begin"] = begin
+    connection["request_length"] = length
+
+    try:
+        send_connection_message(
+            connection,
+            make_request(
+                piece_index,
+                begin,
+                length
+            )
+        )
+    except OSError:
+        connection["request_begin"] = None
+        connection["request_length"] = 0
+        raise
+
+    log_event(
+        peer["log_file"],
+        "REQUEST_SENT",
+        f"Requested piece {piece_index} bytes {begin}:{begin + length} "
+        f"from {connection['address']}"
+    )
+
+    return True
+
+
+# Send one tracker announce for a running peer
+def announce_peer(peer, event=None):
+    with peer["tracker_lock"]:
+        response = announce_to_tracker(
+            tracker_url=peer["tracker_url"],
+            info_hash=peer["info_hash"],
+            peer_id=peer["peer_id"],
+            port=peer["port"],
+            uploaded=peer["uploaded"],
+            downloaded=peer["downloaded"],
+            left=peer["left"],
+            event=event
+        )
+
+    peer["peers"] = get_peer_list(response)
+    peer["interval"] = response[b"interval"]
+
+    return response
+
+
+# Announce one completed download
+def announce_completed(peer):
+    if not is_complete(peer["piece_manager"]):
+        return False
+
+    with peer["state_lock"]:
+        if peer["completed_announced"]:
+            return False
+
+        peer["completed_announced"] = True
+        peer["left"] = 0
+
+    try:
+        announce_peer(
+            peer,
+            event="completed"
+        )
+    except (OSError, RuntimeError, ValueError, TypeError) as error:
+        with peer["state_lock"]:
+            peer["completed_announced"] = False
+
+        log_event(
+            peer["log_file"],
+            "TRACKER_ERROR",
+            f"Completed announce failed: {error}"
+        )
+
+        return False
+
+    log_event(
+        peer["log_file"],
+        "DOWNLOAD_COMPLETED",
+        "All pieces were downloaded and verified"
+    )
+
+    return True
+
+
+# Send one requested block to a peer
+def handle_request_message(
+    connection,
+    piece_manager,
+    log_file,
+    message,
+    peer=None
+):
+    piece_index = message["piece_index"]
+    begin = message["begin"]
+    length = message["length"]
+
+    if connection["am_choking"] or not connection["remote_interested"]:
+        log_event(
+            log_file,
+            "REQUEST_REJECTED",
+            f"Rejected request from {connection['address']} while choked"
+        )
+        return
+
+    if length > MAX_BLOCK_SIZE:
+        raise ValueError("requested block is too large")
+
+    try:
+        block = read_piece_block(
+            piece_manager,
+            piece_index,
+            begin,
+            length
+        )
+    except (ValueError, IndexError) as error:
+        log_event(
+            log_file,
+            "REQUEST_REJECTED",
+            f"Rejected request from {connection['address']}: {error}"
+        )
+        return
+
+    send_connection_message(
+        connection,
+        make_piece(
+            piece_index,
+            begin,
+            block
+        )
+    )
+
+    if peer is not None:
+        with peer["state_lock"]:
+            peer["uploaded"] += len(block)
+
+    log_event(
+        log_file,
+        "PIECE_SENT",
+        f"Sent piece {piece_index} bytes {begin}:{begin + len(block)} "
+        f"to {connection['address']}"
+    )
+
+
+# Verify and save one received piece block
+def handle_piece_message(
+    connection,
+    piece_manager,
+    log_file,
+    message,
+    peer
+):
+    if peer is None:
+        raise ValueError("cannot save PIECE without peer state")
+
+    piece_index = message["piece_index"]
+    begin = message["begin"]
+    block = message["block"]
+
+    if connection["request_begin"] is None:
+        raise ValueError("received an unrequested PIECE")
+
+    if piece_index != connection["download_piece"]:
+        raise ValueError("PIECE index does not match request")
+
+    if begin != connection["request_begin"]:
+        raise ValueError("PIECE offset does not match request")
+
+    if len(block) != connection["request_length"]:
+        raise ValueError("PIECE length does not match request")
+
+    connection["download_data"].extend(block)
+    connection["request_begin"] = None
+    connection["request_length"] = 0
+
+    with peer["state_lock"]:
+        peer["downloaded"] += len(block)
+
+    log_event(
+        log_file,
+        "PIECE_RECEIVED",
+        f"Received piece {piece_index} bytes {begin}:{begin + len(block)} "
+        f"from {connection['address']}"
+    )
+
+    piece_size = get_piece_size(
+        piece_manager,
+        piece_index
+    )
+
+    if len(connection["download_data"]) < piece_size:
+        request_next_block(
+            connection,
+            peer
+        )
+        return
+
+    if len(connection["download_data"]) > piece_size:
+        raise ValueError("received piece exceeds expected size")
+
+    piece_data = bytes(connection["download_data"])
+    saved = save_piece(
+        piece_manager,
+        piece_index,
+        piece_data
+    )
+
+    release_requested_piece(
+        connection,
+        peer
+    )
+
+    if not saved:
+        log_event(
+            log_file,
+            "PIECE_REJECTED",
+            f"Piece {piece_index} failed SHA-1 verification"
+        )
+
+        request_next_block(
+            connection,
+            peer
+        )
+        return
+
+    left = get_bytes_left(piece_manager)
+
+    with peer["state_lock"]:
+        peer["left"] = left
+
+    log_event(
+        log_file,
+        "PIECE_VERIFIED",
+        f"Piece {piece_index} passed SHA-1 verification"
+    )
+
+    send_have_to_peers(
+        peer["connections"],
+        piece_manager,
+        piece_index,
+        log_file
+    )
+
+    if left == 0:
+        announce_completed(peer)
+        return
+
+    request_next_block(
+        connection,
+        peer
+    )
+
+
 # Handle one parsed message from a connected peer
 def handle_received_message(
     connection,
     piece_manager,
     log_file,
-    message
+    message,
+    peer=None
 ):
     message_type = message["type"]
     address = connection["address"]
 
     if message_type == "keep_alive":
+        log_event(
+            log_file,
+            "PEER_PING_RECEIVED",
+            f"Received keep-alive from {address}"
+        )
         return
 
     if message_type == "bitfield":
@@ -475,6 +826,11 @@ def handle_received_message(
             connection,
             piece_manager,
             log_file
+        )
+
+        request_next_block(
+            connection,
+            peer
         )
 
         return
@@ -517,6 +873,11 @@ def handle_received_message(
             log_file
         )
 
+        request_next_block(
+            connection,
+            peer
+        )
+
         return
 
     if message_type == "interested":
@@ -529,12 +890,16 @@ def handle_received_message(
         )
 
         if connection["am_choking"]:
-            send_connection_message(
-                connection,
-                make_unchoke()
-            )
-
             connection["am_choking"] = False
+
+            try:
+                send_connection_message(
+                    connection,
+                    make_unchoke()
+                )
+            except OSError:
+                connection["am_choking"] = True
+                raise
 
             log_event(
                 log_file,
@@ -575,6 +940,39 @@ def handle_received_message(
             f"Peer {address} unchoked us"
         )
 
+        request_next_block(
+            connection,
+            peer
+        )
+
+        return
+
+    if message_type == "request":
+        if piece_manager is None:
+            raise ValueError("cannot serve REQUEST without piece manager")
+
+        handle_request_message(
+            connection,
+            piece_manager,
+            log_file,
+            message,
+            peer
+        )
+
+        return
+
+    if message_type == "piece":
+        if piece_manager is None:
+            raise ValueError("cannot save PIECE without piece manager")
+
+        handle_piece_message(
+            connection,
+            piece_manager,
+            log_file,
+            message,
+            peer
+        )
+
         return
 
     log_event(
@@ -590,7 +988,8 @@ def handle_peer_messages(
     address,
     connection,
     log_file,
-    piece_manager=None
+    piece_manager=None,
+    peer=None
 ):
     while True:
         try:
@@ -600,7 +999,8 @@ def handle_peer_messages(
                 connection,
                 piece_manager,
                 log_file,
-                message
+                message,
+                peer
             )
 
         except socket.timeout:
@@ -615,11 +1015,17 @@ def handle_peer_messages(
         ) as error:
             connection["connected"] = False
 
-            log_event(
-                log_file,
-                "PEER_DISCONNECTED",
-                f"Connection with {address} ended: {error}"
+            release_requested_piece(
+                connection,
+                peer
             )
+
+            if peer is None or peer["running"]:
+                log_event(
+                    log_file,
+                    "PEER_DISCONNECTED",
+                    f"Connection with {address} ended: {error}"
+                )
 
             try:
                 sock.close()
@@ -637,7 +1043,8 @@ def handle_incoming_peer(
     peer_id,
     log_file,
     connections,
-    piece_manager
+    piece_manager,
+    peer=None
 ):
     try:
         remote_handshake = receive_handshake(
@@ -657,7 +1064,11 @@ def handle_incoming_peer(
             remote_handshake["peer_id"]
         )
 
-        connections.append(connection)
+        if peer is None:
+            connections.append(connection)
+        else:
+            with peer["connections_lock"]:
+                connections.append(connection)
 
         log_event(
             log_file,
@@ -670,7 +1081,8 @@ def handle_incoming_peer(
             address,
             connection,
             log_file,
-            piece_manager
+            piece_manager,
+            peer
         )
 
     except (
@@ -764,7 +1176,8 @@ def connect_and_handshake(
 def start_peer_message_thread(
     connection,
     piece_manager,
-    log_file
+    log_file,
+    peer=None
 ):
     thread = threading.Thread(
         target=handle_peer_messages,
@@ -773,7 +1186,8 @@ def start_peer_message_thread(
             connection["address"],
             connection,
             log_file,
-            piece_manager
+            piece_manager,
+            peer
         ),
         daemon=True
     )
@@ -786,6 +1200,9 @@ def start_peer_message_thread(
 
 # Connect one running peer to another peer
 def connect_peer(peer, ip, port):
+    if not peer["running"]:
+        return None
+
     connection = connect_and_handshake(
         ip=ip,
         port=port,
@@ -798,12 +1215,22 @@ def connect_peer(peer, ip, port):
     if connection is None:
         return None
 
-    peer["connections"].append(connection)
+    with peer["connections_lock"]:
+        for existing in peer["connections"]:
+            if (
+                existing["connected"]
+                and existing["peer_id"] == connection["peer_id"]
+            ):
+                connection["socket"].close()
+                return existing
+
+        peer["connections"].append(connection)
 
     start_peer_message_thread(
         connection,
         peer["piece_manager"],
-        peer["log_file"]
+        peer["log_file"],
+        peer
     )
 
     return connection
@@ -923,23 +1350,7 @@ def start_peer(
     )
 
     connections = []
-
-    accept_thread = threading.Thread(
-        target=accept_peer_connections,
-        args=(
-            server,
-            info_hash,
-            peer_id,
-            log_file,
-            connections,
-            piece_manager
-        ),
-        daemon=True
-    )
-
-    accept_thread.start()
-
-    return {
+    peer = {
         "metainfo": metainfo,
         "info": info,
         "info_hash": info_hash,
@@ -955,6 +1366,343 @@ def start_peer(
         "server": server,
         "peers": peers,
         "connections": connections,
-        "accept_thread": accept_thread,
-        "interval": tracker_response[b"interval"]
+        "accept_thread": None,
+        "tracker_thread": None,
+        "ping_thread": None,
+        "interval": tracker_response[b"interval"],
+        "running": True,
+        "tasks_started": False,
+        "completed_announced": left == 0,
+        "requested_pieces": set(),
+        "stop_event": threading.Event(),
+        "state_lock": threading.Lock(),
+        "download_lock": threading.Lock(),
+        "tracker_lock": threading.Lock(),
+        "connections_lock": threading.Lock()
     }
+
+    accept_thread = threading.Thread(
+        target=accept_peer_connections,
+        args=(
+            server,
+            info_hash,
+            peer_id,
+            log_file,
+            connections,
+            piece_manager,
+            peer
+        ),
+        daemon=True
+    )
+
+    peer["accept_thread"] = accept_thread
+    accept_thread.start()
+
+    return peer
+
+
+# Read one peer returned by the tracker
+def read_tracker_peer(peer_info):
+    if not isinstance(peer_info, dict):
+        raise TypeError("tracker peer must be a dictionary")
+
+    required = [
+        b"peer_id",
+        b"ip",
+        b"port"
+    ]
+
+    for field in required:
+        if field not in peer_info:
+            raise ValueError("tracker peer is missing a field")
+
+    remote_peer_id = peer_info[b"peer_id"]
+    ip = peer_info[b"ip"]
+    port = peer_info[b"port"]
+
+    if not isinstance(remote_peer_id, bytes) or len(remote_peer_id) != 20:
+        raise ValueError("tracker peer_id must be 20 bytes")
+
+    if isinstance(ip, bytes):
+        ip = ip.decode("ascii")
+
+    if not isinstance(ip, str):
+        raise TypeError("tracker peer IP must be bytes or a string")
+
+    if isinstance(port, bool) or not isinstance(port, int):
+        raise TypeError("tracker peer port must be an integer")
+
+    if not 1 <= port <= 65535:
+        raise ValueError("tracker peer port is invalid")
+
+    return remote_peer_id, ip, port
+
+
+# Connect to peers returned by the tracker
+def connect_discovered_peers(peer, tracker_peers):
+    connected_count = 0
+
+    for peer_info in tracker_peers:
+        try:
+            remote_peer_id, ip, port = read_tracker_peer(peer_info)
+        except (UnicodeDecodeError, ValueError, TypeError) as error:
+            log_event(
+                peer["log_file"],
+                "TRACKER_ERROR",
+                f"Ignored invalid tracker peer: {error}"
+            )
+            continue
+
+        if remote_peer_id == peer["peer_id"] or port == peer["port"]:
+            continue
+
+        with peer["connections_lock"]:
+            already_connected = any(
+                connection["connected"]
+                and connection["peer_id"] == remote_peer_id
+                for connection in peer["connections"]
+            )
+
+        if already_connected:
+            continue
+
+        connection = connect_peer(
+            peer,
+            ip,
+            port
+        )
+
+        if connection is not None:
+            connected_count += 1
+
+    return connected_count
+
+
+# Refresh the tracker peer list periodically
+def tracker_update_loop(peer):
+    while peer["running"]:
+        interval = peer["interval"]
+
+        if isinstance(interval, bool) or not isinstance(interval, int):
+            interval = 30
+
+        if interval <= 0:
+            interval = 30
+
+        if peer["stop_event"].wait(interval):
+            break
+
+        try:
+            response = announce_peer(peer)
+
+            log_event(
+                peer["log_file"],
+                "TRACKER_RESPONSE",
+                f"Received {len(peer['peers'])} peers"
+            )
+
+            connect_discovered_peers(
+                peer,
+                get_peer_list(response)
+            )
+
+        except (OSError, RuntimeError, ValueError, TypeError) as error:
+            log_event(
+                peer["log_file"],
+                "TRACKER_ERROR",
+                f"Periodic announce failed: {error}"
+            )
+
+
+# Ping connected peers periodically
+def peer_ping_loop(peer):
+    while peer["running"]:
+        if peer["stop_event"].wait(PEER_PING_INTERVAL):
+            break
+
+        with peer["connections_lock"]:
+            connections = list(peer["connections"])
+
+        for connection in connections:
+            if not connection["connected"]:
+                continue
+
+            try:
+                send_connection_message(
+                    connection,
+                    make_keep_alive()
+                )
+
+                log_event(
+                    peer["log_file"],
+                    "PEER_PING_SENT",
+                    f"Sent keep-alive to {connection['address']}"
+                )
+
+            except OSError as error:
+                connection["connected"] = False
+
+                release_requested_piece(
+                    connection,
+                    peer
+                )
+
+                log_event(
+                    peer["log_file"],
+                    "PEER_DISCONNECTED",
+                    f"Ping to {connection['address']} failed: {error}"
+                )
+
+
+# Start automatic tracker and peer tasks
+def start_peer_tasks(peer):
+    with peer["state_lock"]:
+        if peer["tasks_started"]:
+            return
+
+        peer["tasks_started"] = True
+
+    tracker_thread = threading.Thread(
+        target=tracker_update_loop,
+        args=(peer,),
+        daemon=True
+    )
+    ping_thread = threading.Thread(
+        target=peer_ping_loop,
+        args=(peer,),
+        daemon=True
+    )
+
+    peer["tracker_thread"] = tracker_thread
+    peer["ping_thread"] = ping_thread
+
+    tracker_thread.start()
+    ping_thread.start()
+
+    connect_discovered_peers(
+        peer,
+        peer["peers"]
+    )
+
+
+# Stop one peer gracefully
+def stop_peer(peer):
+    with peer["state_lock"]:
+        if not peer["running"]:
+            return
+
+        peer["running"] = False
+
+    peer["stop_event"].set()
+
+    try:
+        announce_peer(
+            peer,
+            event="stopped"
+        )
+    except (OSError, RuntimeError, ValueError, TypeError) as error:
+        log_event(
+            peer["log_file"],
+            "TRACKER_ERROR",
+            f"Stopped announce failed: {error}"
+        )
+
+    try:
+        peer["server"].close()
+    except OSError:
+        pass
+
+    with peer["connections_lock"]:
+        connections = list(peer["connections"])
+
+    for connection in connections:
+        connection["connected"] = False
+
+        release_requested_piece(
+            connection,
+            peer
+        )
+
+        try:
+            connection["socket"].close()
+        except OSError:
+            pass
+
+    current_thread = threading.current_thread()
+
+    for thread in [
+        peer["accept_thread"],
+        peer["tracker_thread"],
+        peer["ping_thread"]
+    ]:
+        if thread is not None and thread is not current_thread:
+            thread.join(timeout=2)
+
+    log_event(
+        peer["log_file"],
+        "PEER_STOPPED",
+        f"Peer on port {peer['port']} stopped"
+    )
+
+
+# Run one peer until it is stopped
+def run_peer(
+    torrent_path,
+    port,
+    data_root=None
+):
+    peer = start_peer(
+        torrent_path,
+        port,
+        data_root=data_root
+    )
+
+    start_peer_tasks(peer)
+
+    try:
+        while peer["running"]:
+            peer["stop_event"].wait(1)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        stop_peer(peer)
+
+    return peer
+
+
+# Start one threaded peer for each torrent
+def start_torrent_pool(torrent_configs):
+    if not isinstance(torrent_configs, list) or not torrent_configs:
+        raise ValueError("torrent configs must be a nonempty list")
+
+    peers = []
+
+    try:
+        for config in torrent_configs:
+            if not isinstance(config, dict):
+                raise TypeError("torrent config must be a dictionary")
+
+            if "torrent_path" not in config or "port" not in config:
+                raise ValueError("torrent config needs torrent_path and port")
+
+            peer = start_peer(
+                config["torrent_path"],
+                config["port"],
+                left=config.get("left"),
+                data_root=config.get("data_root")
+            )
+
+            start_peer_tasks(peer)
+            peers.append(peer)
+
+    except (OSError, RuntimeError, ValueError, TypeError):
+        stop_torrent_pool(peers)
+        raise
+
+    return peers
+
+
+# Stop every peer in the torrent pool
+def stop_torrent_pool(peers):
+    for peer in peers:
+        stop_peer(peer)
