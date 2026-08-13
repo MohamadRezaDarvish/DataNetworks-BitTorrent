@@ -1,6 +1,6 @@
 File Name: peer_6881.log
 Creation Date/Time: 2026-08-13 02:24:44
-Last Modified Date/Time: 2026-08-13 19:11:09
+Last Modified Date/Time: 2026-08-14 00:43:06
 
 --- EVENTS ---
 Event Type: PEER_STARTED
@@ -273,5 +273,169 @@ Description: Peer ('127.0.0.1', 42164) now has piece 2
 --------------------------------------------------
 Event Type: PEER_STOPPED
 Date/Time: 2026-08-13 19:11:09
+Description: Peer on port 6881 stopped
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: Listening on port 6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Received 0 peers
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: Listening on port 6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Received 0 peers
+--------------------------------------------------
+Event Type: PEER_HANDSHAKE
+Date/Time: 2026-08-14 00:43:00
+Description: Handshake completed with ('127.0.0.1', 52750)
+--------------------------------------------------
+Event Type: PEER_DISCONNECTED
+Date/Time: 2026-08-14 00:43:00
+Description: Connection with ('127.0.0.1', 52750) ended: [Errno 9] Bad file descriptor
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: Listening on port 6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Received 0 peers
+--------------------------------------------------
+Event Type: PEER_HANDSHAKE
+Date/Time: 2026-08-14 00:43:00
+Description: Handshake completed with ('127.0.0.1', 52762)
+--------------------------------------------------
+Event Type: INTERESTED_RECEIVED
+Date/Time: 2026-08-14 00:43:00
+Description: Peer ('127.0.0.1', 52762) is interested
+--------------------------------------------------
+Event Type: UNCHOKE_SENT
+Date/Time: 2026-08-14 00:43:00
+Description: Unchoked peer ('127.0.0.1', 52762)
+--------------------------------------------------
+Event Type: PEER_DISCONNECTED
+Date/Time: 2026-08-14 00:43:00
+Description: Connection with ('127.0.0.1', 52762) ended: [Errno 9] Bad file descriptor
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: Listening on port 6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Received 0 peers
+--------------------------------------------------
+Event Type: PEER_HANDSHAKE
+Date/Time: 2026-08-14 00:43:00
+Description: Handshake completed with ('127.0.0.1', 52768)
+--------------------------------------------------
+Event Type: BITFIELD_RECEIVED
+Date/Time: 2026-08-14 00:43:00
+Description: Peer ('127.0.0.1', 52768) has pieces []
+--------------------------------------------------
+Event Type: BITFIELD_SENT
+Date/Time: 2026-08-14 00:43:00
+Description: Sent bitfield e0 to ('127.0.0.1', 52768)
+--------------------------------------------------
+Event Type: INTERESTED_RECEIVED
+Date/Time: 2026-08-14 00:43:00
+Description: Peer ('127.0.0.1', 52768) is interested
+--------------------------------------------------
+Event Type: UNCHOKE_SENT
+Date/Time: 2026-08-14 00:43:00
+Description: Unchoked peer ('127.0.0.1', 52768)
+--------------------------------------------------
+Event Type: PIECE_SENT
+Date/Time: 2026-08-14 00:43:00
+Description: Sent piece 0 bytes 0:10 to ('127.0.0.1', 52768)
+--------------------------------------------------
+Event Type: HAVE_RECEIVED
+Date/Time: 2026-08-14 00:43:00
+Description: Peer ('127.0.0.1', 52768) now has piece 0
+--------------------------------------------------
+Event Type: PIECE_SENT
+Date/Time: 2026-08-14 00:43:00
+Description: Sent piece 1 bytes 0:10 to ('127.0.0.1', 52768)
+--------------------------------------------------
+Event Type: HAVE_RECEIVED
+Date/Time: 2026-08-14 00:43:00
+Description: Peer ('127.0.0.1', 52768) now has piece 1
+--------------------------------------------------
+Event Type: PIECE_SENT
+Date/Time: 2026-08-14 00:43:00
+Description: Sent piece 2 bytes 0:6 to ('127.0.0.1', 52768)
+--------------------------------------------------
+Event Type: HAVE_RECEIVED
+Date/Time: 2026-08-14 00:43:00
+Description: Peer ('127.0.0.1', 52768) now has piece 2
+--------------------------------------------------
+Event Type: NOT_INTERESTED_RECEIVED
+Date/Time: 2026-08-14 00:43:00
+Description: Peer ('127.0.0.1', 52768) is not interested
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:04
+Description: Peer on port 6881 stopped
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:04
+Description: Listening on port 6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:04
+Description: Received 0 peers
+--------------------------------------------------
+Event Type: PEER_HANDSHAKE
+Date/Time: 2026-08-14 00:43:04
+Description: Handshake completed with ('127.0.0.1', 52770)
+--------------------------------------------------
+Event Type: BITFIELD_RECEIVED
+Date/Time: 2026-08-14 00:43:04
+Description: Peer ('127.0.0.1', 52770) has pieces []
+--------------------------------------------------
+Event Type: BITFIELD_SENT
+Date/Time: 2026-08-14 00:43:04
+Description: Sent bitfield e0 to ('127.0.0.1', 52770)
+--------------------------------------------------
+Event Type: INTERESTED_RECEIVED
+Date/Time: 2026-08-14 00:43:04
+Description: Peer ('127.0.0.1', 52770) is interested
+--------------------------------------------------
+Event Type: UNCHOKE_SENT
+Date/Time: 2026-08-14 00:43:04
+Description: Unchoked peer ('127.0.0.1', 52770)
+--------------------------------------------------
+Event Type: PIECE_SENT
+Date/Time: 2026-08-14 00:43:04
+Description: Sent piece 0 bytes 0:10 to ('127.0.0.1', 52770)
+--------------------------------------------------
+Event Type: HAVE_RECEIVED
+Date/Time: 2026-08-14 00:43:04
+Description: Peer ('127.0.0.1', 52770) now has piece 0
+--------------------------------------------------
+Event Type: PIECE_SENT
+Date/Time: 2026-08-14 00:43:04
+Description: Sent piece 1 bytes 0:10 to ('127.0.0.1', 52770)
+--------------------------------------------------
+Event Type: HAVE_RECEIVED
+Date/Time: 2026-08-14 00:43:04
+Description: Peer ('127.0.0.1', 52770) now has piece 1
+--------------------------------------------------
+Event Type: PIECE_SENT
+Date/Time: 2026-08-14 00:43:04
+Description: Sent piece 2 bytes 0:6 to ('127.0.0.1', 52770)
+--------------------------------------------------
+Event Type: HAVE_RECEIVED
+Date/Time: 2026-08-14 00:43:04
+Description: Peer ('127.0.0.1', 52770) now has piece 2
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:06
 Description: Peer on port 6881 stopped
 --------------------------------------------------

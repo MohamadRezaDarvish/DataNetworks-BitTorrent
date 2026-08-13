@@ -1,6 +1,6 @@
 File Name: tracker.log
 Creation Date/Time: 2026-08-12 22:44:13
-Last Modified Date/Time: 2026-08-13 19:11:15
+Last Modified Date/Time: 2026-08-14 00:43:12
 
 --- EVENTS ---
 Event Type: TRACKER_STARTED
@@ -621,5 +621,389 @@ Description: 127.0.0.1:6892
 --------------------------------------------------
 Event Type: TRACKER_RESPONSE
 Date/Time: 2026-08-13 19:11:15
+Description: Returned 0 peers to 127.0.0.1:6892
+--------------------------------------------------
+Event Type: TRACKER_STARTED
+Date/Time: 2026-08-14 00:37:37
+Description: Tracker listening on port 6969
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:40:29
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:40:29
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:40:29
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:40:29
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_COMPLETED
+Date/Time: 2026-08-14 00:40:29
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:40:29
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:40:29
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:40:29
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:40:29
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:40:29
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_TIMEOUT
+Date/Time: 2026-08-14 00:40:30
+Description: Removed stale peer
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:40:30
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:40:30
+Description: Returned 0 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_TIMEOUT
+Date/Time: 2026-08-14 00:42:58
+Description: Removed stale peer
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:42:58
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:42:58
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:42:58
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:42:58
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_COMPLETED
+Date/Time: 2026-08-14 00:42:58
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:42:58
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:42:58
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:42:58
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:42:58
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:42:58
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_TIMEOUT
+Date/Time: 2026-08-14 00:42:59
+Description: Removed stale peer
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:42:59
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:42:59
+Description: Returned 0 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_UPDATE
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 0 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 0 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 0 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_COMPLETED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_UPDATE
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:00
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:00
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:02
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:02
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:04
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:04
+Description: Returned 0 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:04
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:04
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_COMPLETED
+Date/Time: 2026-08-14 00:43:04
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:04
+Description: Returned 1 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:04
+Description: 127.0.0.1:6881
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:04
+Description: Returned 1 peers to 127.0.0.1:6881
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:06
+Description: 127.0.0.1:6883
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:06
+Description: Returned 1 peers to 127.0.0.1:6883
+--------------------------------------------------
+Event Type: PEER_COMPLETED
+Date/Time: 2026-08-14 00:43:06
+Description: 127.0.0.1:6883
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:06
+Description: Returned 1 peers to 127.0.0.1:6883
+--------------------------------------------------
+Event Type: PEER_UPDATE
+Date/Time: 2026-08-14 00:43:06
+Description: 127.0.0.1:6883
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:06
+Description: Returned 1 peers to 127.0.0.1:6883
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:06
+Description: 127.0.0.1:6883
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:06
+Description: Returned 1 peers to 127.0.0.1:6883
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:08
+Description: 127.0.0.1:6882
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:08
+Description: Returned 0 peers to 127.0.0.1:6882
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:10
+Description: 127.0.0.1:6891
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:10
+Description: Returned 0 peers to 127.0.0.1:6891
+--------------------------------------------------
+Event Type: PEER_STARTED
+Date/Time: 2026-08-14 00:43:10
+Description: 127.0.0.1:6892
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:10
+Description: Returned 0 peers to 127.0.0.1:6892
+--------------------------------------------------
+Event Type: PEER_UPDATE
+Date/Time: 2026-08-14 00:43:10
+Description: 127.0.0.1:6891
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:10
+Description: Returned 0 peers to 127.0.0.1:6891
+--------------------------------------------------
+Event Type: PEER_UPDATE
+Date/Time: 2026-08-14 00:43:10
+Description: 127.0.0.1:6892
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:10
+Description: Returned 0 peers to 127.0.0.1:6892
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:10
+Description: 127.0.0.1:6891
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:10
+Description: Returned 0 peers to 127.0.0.1:6891
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-14 00:43:12
+Description: 127.0.0.1:6892
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-14 00:43:12
 Description: Returned 0 peers to 127.0.0.1:6892
 --------------------------------------------------

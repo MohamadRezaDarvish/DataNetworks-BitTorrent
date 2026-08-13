@@ -1,11 +1,11 @@
-from pathlib import Path
 import hashlib
 import secrets
 import socket
 import struct
 import threading
-from urllib.request import urlopen
+from pathlib import Path
 from urllib.parse import quote_from_bytes
+from urllib.request import urlopen
 
 from common.bencode import bencode, bendecode
 from common.logger import log_event
@@ -21,7 +21,7 @@ from peer.messages import (
     make_request,
     make_unchoke,
     parse_handshake,
-    parse_message
+    parse_message,
 )
 from peer.piece_manager import (
     create_piece_manager,
@@ -33,9 +33,8 @@ from peer.piece_manager import (
     have_piece,
     is_complete,
     read_piece_block,
-    save_piece
+    save_piece,
 )
-
 
 PEER_HOST = "0.0.0.0"
 TRACKER_TIMEOUT = 5
