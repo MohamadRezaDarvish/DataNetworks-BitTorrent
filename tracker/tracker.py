@@ -71,6 +71,12 @@ def remove_peer(info_hash, peer_id):
             del swarms[info_hash]
 
 
+# Check whether one peer is already registered
+def peer_is_registered(info_hash, peer_id):
+    with lock:
+        return peer_id in swarms.get(info_hash, {})
+
+
 # Remove peers that stopped announcing
 def remove_stale_peers():
     now = time.monotonic()
@@ -252,12 +258,22 @@ class TrackerHandler(BaseHTTPRequestHandler):
                 )
                 return
 
-            if event not in ["started", "completed", "stopped"]:
+            if event == "":
+                event = None
+
+            elif event not in ["started", "completed", "stopped"]:
                 send_failure(
                     self,
                     "Unknown event"
                 )
                 return
+
+        if event != "started" and not peer_is_registered(info_hash, peer_id):
+            send_failure(
+                self,
+                "First announce must include event=started"
+            )
+            return
 
         ip = self.client_address[0]
 

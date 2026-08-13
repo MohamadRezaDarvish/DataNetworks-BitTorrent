@@ -2,14 +2,20 @@ from pathlib import Path
 import hashlib
 import secrets
 import socket
+import struct
 import threading
 from urllib.request import urlopen
 from urllib.parse import quote_from_bytes
 
 from common.bencode import bencode, bendecode
 from common.logger import log_event
-from common.protocol import HANDSHAKE_LENGTH
-from peer.messages import make_handshake, parse_handshake
+from common.protocol import HANDSHAKE_LENGTH, LENGTH_PREFIX_SIZE
+from peer.messages import (
+    make_handshake,
+    make_unchoke,
+    parse_handshake,
+    parse_message
+)
 
 
 PEER_HOST = "0.0.0.0"
@@ -250,6 +256,133 @@ def receive_handshake(sock, expected_info_hash):
     return handshake
 
 
+# Send one normal peer message
+def send_peer_message(sock, message):
+    if not isinstance(message, bytes):
+        raise TypeError("message must be bytes")
+
+    sock.sendall(message)
+
+
+# Receive one complete normal peer message
+def receive_peer_message(sock):
+    length_data = recv_exact(
+        sock,
+        LENGTH_PREFIX_SIZE
+    )
+
+    length = struct.unpack(
+        ">I",
+        length_data
+    )[0]
+
+    if length == 0:
+        return parse_message(length_data)
+
+    message_data = recv_exact(
+        sock,
+        length
+    )
+
+    return parse_message(
+        length_data + message_data
+    )
+
+
+# Handle messages received from one connected peer
+def handle_peer_messages(
+    sock,
+    address,
+    connection,
+    log_file
+):
+    while True:
+        try:
+            message = receive_peer_message(sock)
+
+        except socket.timeout:
+            continue
+
+        except (ConnectionError, ValueError, OSError) as error:
+            log_event(
+                log_file,
+                "PEER_DISCONNECTED",
+                f"Connection with {address} ended: {error}"
+            )
+
+            sock.close()
+            return
+
+        message_type = message["type"]
+
+        if message_type == "keep_alive":
+            continue
+
+        if message_type == "interested":
+            connection["remote_interested"] = True
+
+            log_event(
+                log_file,
+                "INTERESTED_RECEIVED",
+                f"Peer {address} is interested"
+            )
+
+            if connection["am_choking"]:
+                send_peer_message(
+                    sock,
+                    make_unchoke()
+                )
+
+                connection["am_choking"] = False
+
+                log_event(
+                    log_file,
+                    "UNCHOKE_SENT",
+                    f"Unchoked peer {address}"
+                )
+
+            continue
+
+        if message_type == "not_interested":
+            connection["remote_interested"] = False
+
+            log_event(
+                log_file,
+                "NOT_INTERESTED_RECEIVED",
+                f"Peer {address} is not interested"
+            )
+
+            continue
+
+        if message_type == "choke":
+            connection["am_choked"] = True
+
+            log_event(
+                log_file,
+                "CHOKE_RECEIVED",
+                f"Peer {address} choked us"
+            )
+
+            continue
+
+        if message_type == "unchoke":
+            connection["am_choked"] = False
+
+            log_event(
+                log_file,
+                "UNCHOKE_RECEIVED",
+                f"Peer {address} unchoked us"
+            )
+
+            continue
+
+        log_event(
+            log_file,
+            "PEER_MESSAGE",
+            f"Received {message_type} from {address}"
+        )
+
+
 # Handle a new incoming peer connection
 def handle_incoming_peer(
     sock,
@@ -271,16 +404,29 @@ def handle_incoming_peer(
             peer_id
         )
 
-        connections.append({
+        connection = {
             "socket": sock,
             "address": address,
-            "peer_id": remote_handshake["peer_id"]
-        })
+            "peer_id": remote_handshake["peer_id"],
+            "am_choking": True,
+            "am_choked": True,
+            "am_interested": False,
+            "remote_interested": False
+        }
+
+        connections.append(connection)
 
         log_event(
             log_file,
             "PEER_HANDSHAKE",
             f"Handshake completed with {address}"
+        )
+
+        handle_peer_messages(
+            sock,
+            address,
+            connection,
+            log_file
         )
 
     except (ConnectionError, ValueError, socket.timeout, OSError) as error:
@@ -330,7 +476,11 @@ def connect_and_handshake(
         return {
             "socket": sock,
             "address": (ip, port),
-            "peer_id": remote_handshake["peer_id"]
+            "peer_id": remote_handshake["peer_id"],
+            "am_choking": True,
+            "am_choked": True,
+            "am_interested": False,
+            "remote_interested": False
         }
 
     except (ConnectionError, ValueError, socket.timeout, OSError) as error:
