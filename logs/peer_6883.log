@@ -1,181 +1,73 @@
 File Name: peer_6883.log
-Creation Date/Time: 2026-08-13 19:11:09
-Last Modified Date/Time: 2026-08-14 00:43:08
+Creation Date/Time: 2026-08-14 05:00:41
+Last Modified Date/Time: 2026-08-14 05:01:36
 
 --- EVENTS ---
 Event Type: PEER_STARTED
-Date/Time: 2026-08-13 19:11:09
+Date/Time: 2026-08-14 05:00:41
 Description: Listening on port 6883
 --------------------------------------------------
 Event Type: TRACKER_RESPONSE
-Date/Time: 2026-08-13 19:11:09
-Description: Received 1 peers
+Date/Time: 2026-08-14 05:00:41
+Description: Received 0 peers
 --------------------------------------------------
 Event Type: PEER_HANDSHAKE
-Date/Time: 2026-08-13 19:11:09
-Description: Handshake completed with ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: BITFIELD_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: Sent bitfield 00 to ('127.0.0.1', 6882)
+Date/Time: 2026-08-14 05:00:52
+Description: Handshake completed with ('127.0.0.1', 45332)
 --------------------------------------------------
 Event Type: BITFIELD_RECEIVED
-Date/Time: 2026-08-13 19:11:09
-Description: Peer ('127.0.0.1', 6882) has pieces [0, 1, 2]
+Date/Time: 2026-08-14 05:00:52
+Description: Peer ('127.0.0.1', 45332) has pieces []
 --------------------------------------------------
-Event Type: INTERESTED_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: Interested in pieces from ('127.0.0.1', 6882)
+Event Type: BITFIELD_SENT
+Date/Time: 2026-08-14 05:00:52
+Description: Sent bitfield 80 to ('127.0.0.1', 45332)
 --------------------------------------------------
-Event Type: UNCHOKE_RECEIVED
-Date/Time: 2026-08-13 19:11:09
-Description: Peer ('127.0.0.1', 6882) unchoked us
+Event Type: INTERESTED_RECEIVED
+Date/Time: 2026-08-14 05:00:52
+Description: Peer ('127.0.0.1', 45332) is interested
 --------------------------------------------------
-Event Type: REQUEST_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: Requested piece 0 bytes 0:10 from ('127.0.0.1', 6882)
+Event Type: UNCHOKE_SENT
+Date/Time: 2026-08-14 05:00:52
+Description: Unchoked peer ('127.0.0.1', 45332)
 --------------------------------------------------
-Event Type: PIECE_RECEIVED
-Date/Time: 2026-08-13 19:11:09
-Description: Received piece 0 bytes 0:10 from ('127.0.0.1', 6882)
+Event Type: PIECE_SENT
+Date/Time: 2026-08-14 05:00:52
+Description: Sent piece 0 bytes 0:495 to ('127.0.0.1', 45332)
 --------------------------------------------------
-Event Type: PIECE_VERIFIED
-Date/Time: 2026-08-13 19:11:09
-Description: Piece 0 passed SHA-1 verification
+Event Type: HAVE_RECEIVED
+Date/Time: 2026-08-14 05:00:52
+Description: Peer ('127.0.0.1', 45332) now has piece 0
 --------------------------------------------------
-Event Type: HAVE_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: Sent piece 0 to ('127.0.0.1', 6882)
+Event Type: NOT_INTERESTED_RECEIVED
+Date/Time: 2026-08-14 05:00:52
+Description: Peer ('127.0.0.1', 45332) is not interested
 --------------------------------------------------
-Event Type: REQUEST_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: Requested piece 1 bytes 0:10 from ('127.0.0.1', 6882)
+Event Type: PEER_PING_SENT
+Date/Time: 2026-08-14 05:00:56
+Description: Sent keep-alive to ('127.0.0.1', 45332)
 --------------------------------------------------
-Event Type: PIECE_RECEIVED
-Date/Time: 2026-08-13 19:11:09
-Description: Received piece 1 bytes 0:10 from ('127.0.0.1', 6882)
+Event Type: PEER_PING_RECEIVED
+Date/Time: 2026-08-14 05:01:07
+Description: Received keep-alive from ('127.0.0.1', 45332)
 --------------------------------------------------
-Event Type: PIECE_VERIFIED
-Date/Time: 2026-08-13 19:11:09
-Description: Piece 1 passed SHA-1 verification
---------------------------------------------------
-Event Type: HAVE_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: Sent piece 1 to ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: REQUEST_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: Requested piece 2 bytes 0:6 from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: PIECE_RECEIVED
-Date/Time: 2026-08-13 19:11:09
-Description: Received piece 2 bytes 0:6 from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: PIECE_VERIFIED
-Date/Time: 2026-08-13 19:11:09
-Description: Piece 2 passed SHA-1 verification
---------------------------------------------------
-Event Type: HAVE_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: Sent piece 2 to ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: NOT_INTERESTED_SENT
-Date/Time: 2026-08-13 19:11:09
-Description: No longer interested in ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: DOWNLOAD_COMPLETED
-Date/Time: 2026-08-13 19:11:09
-Description: All pieces were downloaded and verified
---------------------------------------------------
-Event Type: PEER_STOPPED
-Date/Time: 2026-08-13 19:11:11
-Description: Peer on port 6883 stopped
---------------------------------------------------
-Event Type: PEER_STARTED
-Date/Time: 2026-08-14 00:43:06
-Description: Listening on port 6883
+Event Type: PEER_PING_SENT
+Date/Time: 2026-08-14 05:01:11
+Description: Sent keep-alive to ('127.0.0.1', 45332)
 --------------------------------------------------
 Event Type: TRACKER_RESPONSE
-Date/Time: 2026-08-14 00:43:06
+Date/Time: 2026-08-14 05:01:11
 Description: Received 1 peers
 --------------------------------------------------
-Event Type: PEER_HANDSHAKE
-Date/Time: 2026-08-14 00:43:06
-Description: Handshake completed with ('127.0.0.1', 6882)
+Event Type: PEER_PING_RECEIVED
+Date/Time: 2026-08-14 05:01:22
+Description: Received keep-alive from ('127.0.0.1', 45332)
 --------------------------------------------------
-Event Type: BITFIELD_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: Sent bitfield 00 to ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: BITFIELD_RECEIVED
-Date/Time: 2026-08-14 00:43:06
-Description: Peer ('127.0.0.1', 6882) has pieces [0, 1, 2]
---------------------------------------------------
-Event Type: INTERESTED_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: Interested in pieces from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: UNCHOKE_RECEIVED
-Date/Time: 2026-08-14 00:43:06
-Description: Peer ('127.0.0.1', 6882) unchoked us
---------------------------------------------------
-Event Type: REQUEST_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: Requested piece 0 bytes 0:10 from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: PIECE_RECEIVED
-Date/Time: 2026-08-14 00:43:06
-Description: Received piece 0 bytes 0:10 from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: PIECE_VERIFIED
-Date/Time: 2026-08-14 00:43:06
-Description: Piece 0 passed SHA-1 verification
---------------------------------------------------
-Event Type: HAVE_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: Sent piece 0 to ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: REQUEST_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: Requested piece 1 bytes 0:10 from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: PIECE_RECEIVED
-Date/Time: 2026-08-14 00:43:06
-Description: Received piece 1 bytes 0:10 from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: PIECE_VERIFIED
-Date/Time: 2026-08-14 00:43:06
-Description: Piece 1 passed SHA-1 verification
---------------------------------------------------
-Event Type: HAVE_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: Sent piece 1 to ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: REQUEST_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: Requested piece 2 bytes 0:6 from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: PIECE_RECEIVED
-Date/Time: 2026-08-14 00:43:06
-Description: Received piece 2 bytes 0:6 from ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: PIECE_VERIFIED
-Date/Time: 2026-08-14 00:43:06
-Description: Piece 2 passed SHA-1 verification
---------------------------------------------------
-Event Type: HAVE_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: Sent piece 2 to ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: NOT_INTERESTED_SENT
-Date/Time: 2026-08-14 00:43:06
-Description: No longer interested in ('127.0.0.1', 6882)
---------------------------------------------------
-Event Type: DOWNLOAD_COMPLETED
-Date/Time: 2026-08-14 00:43:06
-Description: All pieces were downloaded and verified
+Event Type: PEER_PING_SENT
+Date/Time: 2026-08-14 05:01:26
+Description: Sent keep-alive to ('127.0.0.1', 45332)
 --------------------------------------------------
 Event Type: PEER_STOPPED
-Date/Time: 2026-08-14 00:43:08
+Date/Time: 2026-08-14 05:01:36
 Description: Peer on port 6883 stopped
 --------------------------------------------------
