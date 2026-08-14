@@ -1,0 +1,113 @@
+File Name: peer_6887.log
+Creation Date/Time: 2026-08-15 01:03:14
+Last Modified Date/Time: 2026-08-15 01:03:56
+
+--- EVENTS ---
+Event Type: PEER_STARTED
+Date/Time: 2026-08-15 01:03:14
+Description: Listening on port 6887
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-15 01:03:14
+Description: Received 1 peers
+--------------------------------------------------
+Event Type: PEER_HANDSHAKE
+Date/Time: 2026-08-15 01:03:14
+Description: Handshake completed with ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: BITFIELD_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: Sent bitfield 00 to ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: BITFIELD_RECEIVED
+Date/Time: 2026-08-15 01:03:14
+Description: Peer ('127.0.0.1', 6886) has pieces [0, 1, 2]
+--------------------------------------------------
+Event Type: INTERESTED_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: Interested in pieces from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: UNCHOKE_RECEIVED
+Date/Time: 2026-08-15 01:03:14
+Description: Peer ('127.0.0.1', 6886) unchoked us
+--------------------------------------------------
+Event Type: REQUEST_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: Requested piece 0 bytes 0:10 from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PIECE_RECEIVED
+Date/Time: 2026-08-15 01:03:14
+Description: Received piece 0 bytes 0:10 from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PIECE_VERIFIED
+Date/Time: 2026-08-15 01:03:14
+Description: Piece 0 passed SHA-1 verification
+--------------------------------------------------
+Event Type: HAVE_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: Sent piece 0 to ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: REQUEST_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: Requested piece 1 bytes 0:10 from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PIECE_RECEIVED
+Date/Time: 2026-08-15 01:03:14
+Description: Received piece 1 bytes 0:10 from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PIECE_VERIFIED
+Date/Time: 2026-08-15 01:03:14
+Description: Piece 1 passed SHA-1 verification
+--------------------------------------------------
+Event Type: HAVE_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: Sent piece 1 to ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: REQUEST_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: Requested piece 2 bytes 0:6 from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PIECE_RECEIVED
+Date/Time: 2026-08-15 01:03:14
+Description: Received piece 2 bytes 0:6 from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PIECE_VERIFIED
+Date/Time: 2026-08-15 01:03:14
+Description: Piece 2 passed SHA-1 verification
+--------------------------------------------------
+Event Type: HAVE_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: Sent piece 2 to ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: NOT_INTERESTED_SENT
+Date/Time: 2026-08-15 01:03:14
+Description: No longer interested in ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: DOWNLOAD_COMPLETED
+Date/Time: 2026-08-15 01:03:14
+Description: All pieces were downloaded and verified
+--------------------------------------------------
+Event Type: PEER_PING_RECEIVED
+Date/Time: 2026-08-15 01:03:29
+Description: Received keep-alive from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PEER_PING_SENT
+Date/Time: 2026-08-15 01:03:29
+Description: Sent keep-alive to ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PEER_PING_RECEIVED
+Date/Time: 2026-08-15 01:03:44
+Description: Received keep-alive from ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: PEER_PING_SENT
+Date/Time: 2026-08-15 01:03:44
+Description: Sent keep-alive to ('127.0.0.1', 6886)
+--------------------------------------------------
+Event Type: TRACKER_RESPONSE
+Date/Time: 2026-08-15 01:03:44
+Description: Received 1 peers
+--------------------------------------------------
+Event Type: PEER_STOPPED
+Date/Time: 2026-08-15 01:03:56
+Description: Peer on port 6887 stopped
+--------------------------------------------------
